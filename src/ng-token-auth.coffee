@@ -463,7 +463,7 @@ angular.module('ng-token-auth', ['ipCookie'])
 
           # this is something that can be returned from 'resolve' methods
           # of pages that have restricted access
-          validateUser: (opts={}) ->
+          validateUser: (opts={}, httpparams) ->
             configName = opts.config
 
             unless @dfd?
@@ -552,7 +552,7 @@ angular.module('ng-token-auth', ['ipCookie'])
                   else
                     # token has been saved in session var, token has not
                     # expired. must be verified with API.
-                    @validateToken({config: configName})
+                    @validateToken({config: configName}, httpparams)
 
                 # new user session. will redirect to login
                 else
@@ -567,9 +567,9 @@ angular.module('ng-token-auth', ['ipCookie'])
 
 
           # confirm that user's auth token is still valid.
-          validateToken: (opts={}) ->
+          validateToken: (opts={}, httpparams) ->
             unless @tokenHasExpired()
-              $http.get(@apiUrl(opts.config) + @getConfig(opts.config).tokenValidationPath)
+              $http.get(@apiUrl(opts.config) + @getConfig(opts.config).tokenValidationPath, httpparams)
                 .then((resp) =>
                   authData = @getConfig(opts.config).handleTokenValidationResponse(resp.data)
                   @handleValidAuth(authData)

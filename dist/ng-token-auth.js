@@ -436,7 +436,7 @@ angular.module('ng-token-auth', ['ipCookie']).provider('$auth', function() {
               }
               return obj;
             },
-            validateUser: function(opts) {
+            validateUser: function(opts, httpparams) {
               var clientId, configName, expiry, location_parse, params, search, token, uid, url;
               if (opts == null) {
                 opts = {};
@@ -491,7 +491,7 @@ angular.module('ng-token-auth', ['ipCookie']).provider('$auth', function() {
                     } else {
                       this.validateToken({
                         config: configName
-                      });
+                      }, httpparams);
                     }
                   } else {
                     this.rejectDfd({
@@ -504,12 +504,12 @@ angular.module('ng-token-auth', ['ipCookie']).provider('$auth', function() {
               }
               return this.dfd.promise;
             },
-            validateToken: function(opts) {
+            validateToken: function(opts, httpparams) {
               if (opts == null) {
                 opts = {};
               }
               if (!this.tokenHasExpired()) {
-                return $http.get(this.apiUrl(opts.config) + this.getConfig(opts.config).tokenValidationPath).then((function(_this) {
+                return $http.get(this.apiUrl(opts.config) + this.getConfig(opts.config).tokenValidationPath, httpparams).then((function(_this) {
                   return function(resp) {
                     var authData;
                     authData = _this.getConfig(opts.config).handleTokenValidationResponse(resp.data);
